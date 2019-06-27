@@ -17,9 +17,24 @@ var myObstacles = [];
 var player = {
 	x:20,
 	y:470,
+	speedY:0,
+	jumpHeight:280,
 	update: function(){ 
 		gameArea.context.fillRect(this.x, this.y, 30, 30);
-	}
+	}, 
+
+	// we change the y position
+	newPos: function(){
+		if(this.y < this.jumpHeight){
+			this.speedY = 2;
+		}
+		this.y = this.y + this.speedY;
+
+		// while coming down from a jump, our player must stop on the platform.
+		if(this.speedY == 2 && this.y == 470){
+			this.speedY = 0;
+		}
+	},
 }
 
 // variable Game Area: Canvas
@@ -37,6 +52,7 @@ var gameArea = {
 		this.frame = 0;
 		// to update our gameArea every 5 seconds using updateGameArea function
 		this.interval = setInterval(this.updateGameArea, 5);
+		window.addEventListener("keydown", jump);
 	},
 
 	// To update the game
@@ -65,6 +81,9 @@ var gameArea = {
 
 		// updating the player
 		player.update();
+
+		// updating the new position (if jumped) of player 
+		player.newPos();
 	},
 
 	// "clearRect" clears a rectangle of the given size and coordinates
@@ -94,6 +113,11 @@ function everyinterval(n){
 		return true;
 	else
 		return false;
+}
+
+// function to make the player jump
+function jump(){
+	player.speedY = -2;
 }
 
 // function for random gaps between two consecutive obstacles
