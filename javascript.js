@@ -1,6 +1,16 @@
 
 // - - - - - - - - - - variables - - - - - - - - - - //
 
+// variables for images
+var imgPlayer = new Image();
+imgPlayer.src = "images/trex.jpg";
+
+var imgObstacle = new Image();
+imgObstacle.src = "images/cactus.jpg";
+
+var imgCloud = new Image();
+imgCloud.src = "images/cloud.png";
+
 // variables for obstacle
 minHeight = 20;
 maxHeight = 100;
@@ -21,6 +31,7 @@ var player = {
 	jumpHeight:280,
 	update: function(){ 
 		gameArea.context.fillRect(this.x, this.y, 30, 30);
+		// gameArea.context.drawImage(imgPlayer, this.x, this.y, 50, 50);
 	}, 
 
 	// we change the y position
@@ -135,5 +146,6 @@ function obstacle(){
 	this.y = gameArea.canvas.height - this.height;
 	this.draw = function(){
 		gameArea.context.fillRect(this.x, this.y, this.width, this.height);
+		// gameArea.context.drawImage(imgObstacle, this.x, this.y, this.width, this.height);
 	}
 }
