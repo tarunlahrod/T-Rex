@@ -46,6 +46,19 @@ var player = {
 			this.speedY = 0;
 		}
 	},
+
+	/* 
+	player crashes with obstacle when:
+		1. player.x < obstacle.x + obstacle.width
+		2. player.x + player.width > obstacle.x
+		3. player.y + player.height > obstacle.y
+	*/
+	crashWith: function(obs){
+		if(this.x + 30 > obs.x && this.x < obs.x + obs.width && this.y+30 > obs.y){
+			return true;
+		}
+		return false;
+	}
 }
 
 // variable Game Area: Canvas
@@ -68,6 +81,15 @@ var gameArea = {
 
 	// To update the game
 	updateGameArea: function(){
+
+		// checking for a crash
+		for(i=0; i<myObstacles.length; i++){
+			if(player.crashWith(myObstacles[i])){
+				gameArea.stop();
+				return;
+			}
+		}
+
 		gameArea.clear();
 
 		// everytime after running updateGameArea() 150	times, we add a new obstacle
@@ -105,7 +127,7 @@ var gameArea = {
 
 	// to end the game
 	stop:function(){
-
+		clearInterval(this.interval);
 	}
 }
 
@@ -149,3 +171,5 @@ function obstacle(){
 		// gameArea.context.drawImage(imgObstacle, this.x, this.y, this.width, this.height);
 	}
 }
+
+
