@@ -23,6 +23,24 @@ gap = randGap();
 // obstacle variable
 var myObstacles = [];
 
+// colors for obstacles
+var colors = ["black", "red", "green", "blue", "yellow", "gray", "indigo", "chocolate"];
+
+// jumping sound audio
+var audioJump = document.getElementById("audio");
+var audioGameOver = document.getElementById("audio1");
+
+// score
+var scoreText = {
+	x:900, 
+	y:50,
+	update: function(text){
+		gameArea.context.fillStyle="gray";
+		gameArea.context.font="30px Consolas";
+		gameArea.context.fillText(text, this.x, this.y);
+	}
+}
+
 // player
 var player = {
 	x:20,
@@ -30,6 +48,7 @@ var player = {
 	speedY:0,
 	jumpHeight:280,
 	update: function(){ 
+		gameArea.context.fillStyle="black";
 		gameArea.context.fillRect(this.x, this.y, 30, 30);
 		// gameArea.context.drawImage(imgPlayer, this.x, this.y, 50, 50);
 	}, 
@@ -74,6 +93,11 @@ var gameArea = {
 
 		// frame counts the number of times we run "updateGameArea()"
 		this.frame = 0;
+
+		// to count the score
+		this.score = 0;
+		scoreText.update("Score: 0");
+
 		// to update our gameArea every 5 seconds using updateGameArea function
 		this.interval = setInterval(this.updateGameArea, 5);
 		window.addEventListener("keydown", jump);
@@ -112,6 +136,10 @@ var gameArea = {
 		// incrementing the "frame"
 		gameArea.frame++;
 
+		// increment the score
+		gameArea.score+=0.01;
+		scoreText.update("Score: " + Math.floor(gameArea.score));
+
 		// updating the player
 		player.update();
 
@@ -128,6 +156,9 @@ var gameArea = {
 	// to end the game
 	stop:function(){
 		clearInterval(this.interval);
+		// play game over sound
+		audioGameOver.play();
+		alert("Game over!")
 	}
 }
 
@@ -151,6 +182,9 @@ function everyinterval(n){
 // function to make the player jump
 function jump(){
 	player.speedY = -2;
+
+	// playing the jump audio
+	audioJump.play();
 }
 
 // function for random gaps between two consecutive obstacles
@@ -166,7 +200,10 @@ function obstacle(){
 	// drawing the obstacle
 	this.x = 1200;
 	this.y = gameArea.canvas.height - this.height;
+	this.index = Math.floor(Math.random()*colors.length);
+	this.color = colors[this.index];
 	this.draw = function(){
+		gameArea.context.fillStyle = this.color;
 		gameArea.context.fillRect(this.x, this.y, this.width, this.height);
 		// gameArea.context.drawImage(imgObstacle, this.x, this.y, this.width, this.height);
 	}
